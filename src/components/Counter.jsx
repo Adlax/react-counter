@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, memo, useCallback, useMemo } from "react";
+
+// optimization :
+// memo wrapps a component (checks the parameters)
+// useCallback shield useless re-creation of declared functions (prevents re declaring)
+// useMemo shields re-execution of big/large functions calculations (prevent re exec / protects the result of a big function)
+
 // log func
 import { log } from "../log";
 // icons
@@ -26,20 +32,22 @@ const isPrime = (number) => {
 	return true;
 };
 
-const Counter = ({ initialCount }) => {
+// re-render shielded via memo , which compares new and old function/comp parameters...So will not re-rendered,except inside state change OR initialCount prop value changes.
+// it block re-render because of parents brut rendering
+const Counter = memo(({ initialCount }) => {
 	log("<Counter /> rendered", 1);
 
-	const initialCountIsPrime = isPrime(initialCount);
+	const initialCountIsPrime = useMemo(() => isPrime(initialCount), [initialCount]);
 
 	const [counter, setCounter] = useState(initialCount);
 
-	const handleIncrement = () => {
+	const handleIncrement = useCallback(() => {
 		setCounter((oldState) => oldState + 1);
-	};
+	}, []);
 
-	const handleDecrement = () => {
+	const handleDecrement = useCallback(() => {
 		setCounter((oldState) => oldState - 1);
-	};
+	}, []);
 
 	return (
 		<section className="counter">
@@ -57,6 +65,6 @@ const Counter = ({ initialCount }) => {
 			</p>
 		</section>
 	);
-};
+});
 
 export default Counter;

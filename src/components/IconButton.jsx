@@ -1,7 +1,7 @@
-import React from "react";
+import React, { memo } from "react";
 import { log } from "../log";
 
-const IconButton = ({ children, icon, ...rest }) => {
+const IconButton = memo(({ children, icon, ...rest }) => {
 	log("<IconButton/> rendered", 2);
 	const Icon = icon;
 
@@ -11,6 +11,6 @@ const IconButton = ({ children, icon, ...rest }) => {
 			<span className="button-text">{children}</span>
 		</button>
 	);
-};
+});
 
 export default IconButton;
